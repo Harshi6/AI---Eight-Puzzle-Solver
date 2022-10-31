@@ -201,23 +201,24 @@ def goal_state(state,r,c):
 def manhattan_distance(state):
     goal = [[1, 2, 3], [4, 5, 6], [7, 8, 0]]
     moves_count = 0
-    curr_row = 0
-    curr_col = 0
-    goal_row = 0
-    goal_col = 0
+    actualr = 0
+    actualc = 0
+    goalr = 0
+    goalc = 0
 
-    for l in range(1, 8):
+
         for i in range(len(state)):
             for j in range(len(state)):
                 if int(state[i][j]) == l:
-                    curr_row = i
-                    curr_col = j
+                    actualr = i
+                    actualc = j
                 if goal[i][j] == l:
-                    goal_row, goal_col = goal_state(goal,i,j)
+                    goalr, goalc = goal_state(goal,i,j)
 
-        moves_count += abs(goal_row-curr_row) 
-        moves_count += abs(goal_col-curr_col)
+        moves_count += abs(goalr-actualr) 
+        moves_count += abs(goalc-actualc)
              
     return moves_count
 
 main()
+
