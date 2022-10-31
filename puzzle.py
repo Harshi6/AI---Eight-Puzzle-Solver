@@ -143,6 +143,37 @@ def misplaced_tiles(state):
                         tiles_count += 1
     return tiles_count
 
+def goal_state(state,r,c):
+    
+    num = state[r][c]
+    row = 0
+    col = 0
+    if num == 1:
+        row = 0
+        col = 0
+    if num == 2:
+        row = 0
+        col = 1
+    if num == 3:
+        row = 0
+        col = 2
+    if num == 4:
+        row = 1
+        col = 0
+    if num == 5:
+        row = 1
+        col = 1
+    if num == 6:
+        row = 1
+        col = 2
+    if num == 7:
+        row = 2
+        col = 0
+    if num == 8:
+        row = 2
+        col = 1
+    #function should not be called on 0
+    return row, col
 
 def manhattan_distance(state):
     goal = [[1, 2, 3], [4, 5, 6], [7, 8, 0]]
