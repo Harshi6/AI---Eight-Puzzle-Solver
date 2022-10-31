@@ -152,7 +152,18 @@ def manhattan_distance(state):
     goal_row = 0
     goal_col = 0
 
-  
+    for l in range(1, 8):
+        for i in range(len(state)):
+            for j in range(len(state)):
+                if int(state[i][j]) == l:
+                    curr_row = i
+                    curr_col = j
+                if goal[i][j] == l:
+                    goal_row, goal_col = goal_state(goal,i,j)
+
+        moves_count += abs(goal_row-curr_row) 
+        moves_count += abs(goal_col-curr_col)
+             
     return moves_count
 
 main()
