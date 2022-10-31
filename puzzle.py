@@ -97,6 +97,15 @@ def general_search(puzzle, alg):
                 elif alg == 1:
                     step.depth = nodes.depth + 1
                     step.hc = 0
+def find_blank(nodes):
+    row = 0
+    col = 0
+    for r in range(len(nodes.state)):
+        for c in range(len(nodes.state)):
+            if int(nodes.state[r][c]) == 0:
+                row = r
+                col = c
+    return row, col
 
 def expand_node(nodes, prev):
     global nodes_exp
