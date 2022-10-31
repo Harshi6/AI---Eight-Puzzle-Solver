@@ -5,25 +5,154 @@ def main():
     choice = int(input())
 
     if choice == 1:
-        puzzle = (['1', '2', '3'], ['5', '0', '6'], ['4', '7', '8'])
+        problem = (['1', '2', '3'], ['5', '0', '6'], ['4', '7', '8'])
         
     elif choice == 2:
         print("Enter your puzzle, use a zero to represent the blank")
-
+        #take in user input and make the puzzle
         r_one = input("Enter the first row:")
         r_two = input("Enter the second row:")
-        r_three = input("Enter the third row:")
+        r_three = input("Enter the third row:\n")
         r_one = r_one.split(' ')
         r_two = r_two.split(' ')
         r_three = r_three.split(' ')
 
         problem = r_one, r_two, r_three
-
+    # Allow user to select what alg they would like to use to solve the problem
     alg_choice  = "Select an algorithm\n"
     alg_choice += "1.Uniform Cost Search\n"
     alg_choice += "2.A* with the Misplaced Tile Heuristic\n"
-    alg_choice += "3.A* with the Manhattan Distance Heuristic\n"    
-    
+    alg_choice += "3.A* with the Manhattan Distance Heuristic\n"   
     print(alg_choice)
-    alg_ans = int(input())             
+    alg_ans = int(input())   
+    if alg_ans == 1:
+        print("Starting Uniform Cost Search")
+        print(general_search(problem, alg_ans))
+    elif alg_ans == 2:
+        print("Starting A* w Misplaced Tile")
+        print(general_search(problem, alg_ans))
+    elif alg_ans == 3:
+        print("Starting A* w Manhattan Distance")
+        print(general_search(problem, alg_ans))    
+    else:
+        print("Invalid input")
+
+        
+class Node:
+
+    def __init__(self, state, path):
+        self.state = state
+        self.mv1 = None #move variation 1 and so on
+        self.mv2 = None 
+        self.mv3 = None
+        self.mv4 = None
+        self.hc = 0     
+        self.depth = 0
+        self.path = path
+
+def general_search(puzzle, alg):
     
+    prev = []
+    puzzleq = []
+    if alg == 1:
+        h = 0
+    if alg == 2:
+        h = misplaced_tiles(puzzle)
+    if alg == 3:
+        h = manhattan_distance(puzzle)
+
+
+    n = Node(puzzle)
+    n.depth = 0
+    n.hc = 0
+    puzzleq.append(n)
+    prev.append(n.state)
+    FLAG = 1
+
+    while FLAG:
+        if len(puzzleq) == 0:
+            return []
+        if alg == 2:
+            puzzleq = sorted(puzzleq, key=lambda ans: (ans.depth + ans.hc))
+        if alg == 3:
+            puzzleq = sorted(puzzleq, key=lambda ans: (ans.depth + ans.hc))    
+
+        nodes = puzzleq.pop(0)
+
+        if nodes.state == (['1', '2', '3'], ['4', '5', '6'], ['7', '8', '0']):
+            print("Goal state!")
+            print("Solution depth" + str(nodes.depth))
+            break
+      
+        next = expand_node(nodes, prev)
+        moves = [next.mv1, next.mv2, next.mv3, next.mv4]
+
+        for step in moves:
+                if alg == 2:
+                    step.depth = nodes.depth + 1
+                    step.hc = misplaced_tiles(step.state)
+                elif alg == 3:
+                    step.depth = nodes.depth + 1
+                    step.hc = manhattan_distance(step.state)
+                elif alg == 1:
+                    step.depth = nodes.depth + 1
+                    step.hc = 0
+
+def expand_node(nodes, prev):
+    global nodes_exp
+    row = 0
+    col = 0
+      #need to implement find blank
+    if row>0:
+        move_up = copy.deepcopy(nodes.state)
+        temp_up = move_up[row][col]
+        move_up[row][col] = move_up[row - 1][col]
+        move_up[row - 1][col] = temp_up
+       
+    if row < len(nodes.state)-1:
+        move_down = copy.deepcopy(nodes.state)
+        temp_down = move_down[row][col]
+        move_down[row][col] = move_down[row + 1][col]
+        move_down[row + 1][col] = temp_down
+        
+
+    if col < len(nodes.state)-1:
+        move_right = copy.deepcopy(nodes.state)
+        temp_right = move_right[row][col]
+        move_right[row][col] = move_right[row][col+1]
+        move_right[row][col+1] = temp_right
+     
+    if col>0:
+        move_left = copy.deepcopy(nodes.state)
+        temp_left= move_left[row][col]
+        move_left[row][col] = move_left[row][col - 1]
+        move_left[row][col - 1] = temp_left
+
+    
+
+    return nodes
+
+def misplaced_tiles(state):
+    tiles_count = 0
+    goal = [[1, 2, 3], [4, 5, 6], [7, 8, 0]]
+    for column in range(len(state)):
+        for row in range(len(state)):
+            if int(state[column][row]) != goal[column][row]: 
+                if int(state[column][row]) != goal[column][row]:
+                    if int(state[column][row]) != 0:
+                        tiles_count += 1
+    return tiles_count
+
+
+def manhattan_distance(state):
+    goal = [[1, 2, 3], [4, 5, 6], [7, 8, 0]]
+    moves_count = 0
+    curr_row = 0
+    curr_col = 0
+    goal_row = 0
+    goal_col = 0
+
+  
+    return moves_count
+
+main()
