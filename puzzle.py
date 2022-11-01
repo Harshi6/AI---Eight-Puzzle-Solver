@@ -1,23 +1,26 @@
+import copy #used for deepcopy
+import timeit #used for keeping track of runtime
 def main():
     print("Welcome to Harshi Doddapaneni's 8-puzzle solver!\n")
-
+    # Allow user to choose default puzzle or make their own
     print("Type '1' to use a default puzzle, or '2' to enter your own puzzle.")
     choice = int(input())
-
+    #default hard coded choice
     if choice == 1:
         problem = (['1', '2', '3'], ['5', '0', '6'], ['4', '7', '8'])
-        
+     #take in input for custom puzzle   
     elif choice == 2:
-        print("Enter your puzzle, use a zero to represent the blank")
+        print("Enter your puzzle, using a zero to represent the blank. "+ "Please only enter valid 8-puzzles. Enter the puzzle demilimiting"
+        +   + "the numbers with a space. RET only when finished." + '\n')
         #take in user input and make the puzzle
-        r_one = input("Enter the first row:")
-        r_two = input("Enter the second row:")
-        r_three = input("Enter the third row:\n")
-        r_one = r_one.split(' ')
-        r_two = r_two.split(' ')
-        r_three = r_three.split(' ')
+        puzzle_row_one = input("Enter the first row: ")
+        puzzle_row_two  = input("Enter the second row: ")
+        puzzle_row_three = input("Enter the third row: ")
+        puzzle_row_one = puzzle_row_one.split(' ')
+        puzzle_row_two = puzzle_row_two.split(' ')
+        puzzle_row_three = puzzle_row_three.split(' ')
 
-        problem = r_one, r_two, r_three
+        problem = puzzle_row_one, puzzle_row_two ,puzzle_row_three
     # Allow user to select what alg they would like to use to solve the problem
     alg_choice  = "Select an algorithm\n"
     alg_choice += "1.Uniform Cost Search\n"
@@ -25,6 +28,7 @@ def main():
     alg_choice += "3.A* with the Manhattan Distance Heuristic\n"   
     print(alg_choice)
     alg_ans = int(input())   
+    #Begin solving, and will print result
     if alg_ans == 1:
         print("Starting Uniform Cost Search")
         print(general_search(problem, alg_ans))
