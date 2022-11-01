@@ -111,14 +111,8 @@ def find_blank(nodes):
                 col = c
     return row, col
 
-#Now we know where the 0 is. Now we can check all the possible ways it can move based on it's location
-#remember, there are multiple ways to move but at max 4
-def expand_node(nodes, prev):
-    row,col = find_blank(nodes)
-    check  = len(nodes.state) - 1
-    #move up option            
-    if row>0:
-        #swap up
+def move_up(nodes, prev, row, col):
+    if(row > 0):
         move_up = copy.deepcopy(nodes.state)
         temp_up = move_up[row][col]
         move_up[row][col] = move_up[row - 1][col]
@@ -126,7 +120,9 @@ def expand_node(nodes, prev):
         #checks to make sure we are not going back to prev states
         if move_up not in prev:
             nodes.mv1 = Node(move_up)
-    #move down option
+
+def move_down(nodes, prev, row, col):
+    check  = len(nodes.state) - 1
     if row < check:
         #swap down
         move_down = copy.deepcopy(nodes.state)
@@ -135,8 +131,10 @@ def expand_node(nodes, prev):
         move_down[row + 1][col] = temp_down
         #checks to make sure we are not going back to prev states
         if move_down not in prev:
-            nodes.mv2 = Node(move_down)
-    #move right option
+            nodes.mv2 = Node(move_down)       
+
+def move_right(nodes, prev, row, col):
+    check  = len(nodes.state) - 1
     if col < check:
         #swap right
         move_right = copy.deepcopy(nodes.state)
@@ -145,10 +143,10 @@ def expand_node(nodes, prev):
         move_right[row][col+1] = temp_right
         #checks to make sure we are not going back to prev states
         if move_right not in prev:
-            nodes.mv3 = Node(move_right)  
-    #moves left option
-    if col>0:
-        #swap left 
+            nodes.mv3 = Node(move_right)    
+
+def move_left(nodes, prev, row, col):
+     if col>0:
         move_left = copy.deepcopy(nodes.state)
         temp_left= move_left[row][col]
         move_left[row][col] = move_left[row][col - 1]
@@ -156,6 +154,20 @@ def expand_node(nodes, prev):
         #checks to make sure we are not going back to prev states
         if move_left not in prev:
             nodes.mv4 = Node(move_left)  
+     
+#Now we know where the 0 is. Now we can check all the possible ways it can move based on it's location
+#remember, there are multiple ways to move but at max 4
+def expand_node(nodes, prev):
+    row,col = find_blank(nodes)
+
+    #move up option   
+    move_up(nodes, prev, row, col)
+    #move down option         
+    move_down(nodes, prev, row, col)
+    #move right option
+    move_right(nodes, prev, row, col)
+    #moves left option
+    move_left(nodes, prev, row, col)
 
     return nodes
 
