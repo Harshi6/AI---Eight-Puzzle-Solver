@@ -12,7 +12,7 @@ def main():
      #take in input for custom puzzle   
     elif choice == 2:
         print("Enter your puzzle, using a zero to represent the blank. "+ "Please only enter valid 8-puzzles. Enter the puzzle demilimiting"
-        +  "the numbers with a space. RET only when finished." + '\n')
+        +  "the numbers with a space. Type RET only when finished." + '\n')
         #take in user input and make the puzzle
         puzzle_row_one = input("Enter the first row: ")
         puzzle_row_two  = input("Enter the second row: ")
@@ -24,9 +24,9 @@ def main():
         problem = puzzle_row_one, puzzle_row_two ,puzzle_row_three
     # Allow user to select what alg they would like to use to solve the problem
     print("Select an algorithm\n") 
-    print("1.Uniform Cost Search\n")
-    print("2.A* with the Misplaced Tile Heuristic\n")
-    print("3.A* with the Manhattan Distance Heuristic\n")   
+    print("(1)Uniform Cost Search\n")
+    print("(2)A* with the Misplaced Tile Heuristic\n")
+    print("(3)A* with the Manhattan Distance Heuristic\n")   
 
     alg_ans = int(input())   
     #Begin solving, and will print result
@@ -41,18 +41,17 @@ def main():
         print(general_search(problem, alg_ans))    
     else:
         print("Invalid input")
-     
-class Node:
 
-    def __init__(self, state, path):
-        self.state = state
+class Node:
+    #mv's are going to be used to check where 0 can potentially move. At  most, 4 available squares. 
+    def __init__(self, state):
+        self.state = state #current puzzle
         self.mv1 = None #move variation 1 and so on
-        self.mv2 = None 
-        self.mv3 = None
-        self.mv4 = None
-        self.hc = 0     
-        self.depth = 0
-        self.path = path
+        self.mv2 = None #move variation 2
+        self.mv3 = None #move variation 3
+        self.mv4 = None #move variation 4
+        self.hc = 0     #heuristic
+        self.depth = 0  #depth
 
 def general_search(puzzle, alg):
     #begin timer when user finishes selection
@@ -132,7 +131,8 @@ def general_search(puzzle, alg):
                 prev.append(step.state)
         #just getting the max size at this time
         msize = max(msize, size)
-        
+
+#loop around the puzzle to find where the 0 is. Return this
 def find_blank(nodes):
     row = 0
     col = 0
@@ -203,9 +203,11 @@ def expand_node(nodes, prev):
 
     return nodes
 
+#count the total number of misplaced tiles. Check with expected value and actual value. 
+#If they are different, count++. Check all tiles. 
 def misplaced_tiles(state):
     tiles_count = 0
-    goal = [[1, 2, 3], [4, 5, 6], [7, 8, 0]]
+    goal = [[1, 2, 3], [4, 5, 6], [7, 8, 0]] #hardcoded this to compare, easy to modify. Can also make a sep func to compare
     for column in range(len(state)):
         for row in range(len(state)):
             if int(state[column][row]) != goal[column][row]: 
@@ -214,8 +216,10 @@ def misplaced_tiles(state):
                         tiles_count += 1
     return tiles_count
 
+#get the proper row and col that you should have in goal state. 
+#Will use these values to compare distance off in manhattan
 def goal_state(state,r,c):
-    
+    #find num and get corresponding values for row and col 
     num = state[r][c]
     row = 0
     col = 0
@@ -246,27 +250,29 @@ def goal_state(state,r,c):
     #function should not be called on 0
     return row, col
 
+#Find the number of moves for each tile to be in proper place. 
+#We can do this by finding proper values for goal using goal puzzle and actual value for each number. 
+#Take the sum off the difference of both. This will give us the distance.
 def manhattan_distance(state):
-    goal = [[1, 2, 3], [4, 5, 6], [7, 8, 0]]
-    moves_count = 0
-    actualr = 0
-    actualc = 0
-    goalr = 0
-    goalc = 0
+    goal = [[1, 2, 3], [4, 5, 6], [7, 8, 0]] #will use to compare
+    moves_count = 0 #track total moves 
+    actualr = 0 #actual row of num
+    actualc = 0 #actual col of of num
+    goalr = 0   #goal row of num
+    goalc = 0   #goal col of num
 
-
+    for l in range(1, 8): #loop through 1 - 8
         for i in range(len(state)):
             for j in range(len(state)):
-                if int(state[i][j]) == l:
+                if int(state[i][j]) == l: #if number found, store and compare
                     actualr = i
                     actualc = j
                 if goal[i][j] == l:
                     goalr, goalc = goal_state(goal,i,j)
-
+        #finds the distance of row and col and sums 
         moves_count += abs(goalr-actualr) 
         moves_count += abs(goalc-actualc)
              
     return moves_count
 
 main()
-
