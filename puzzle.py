@@ -1,5 +1,6 @@
 import copy #used for deepcopy
 import timeit #used for keeping track of runtime
+
 def main():
     print("Welcome to Harshi Doddapaneni's 8-puzzle solver!\n")
     # Allow user to choose default puzzle or make their own
@@ -11,7 +12,7 @@ def main():
      #take in input for custom puzzle   
     elif choice == 2:
         print("Enter your puzzle, using a zero to represent the blank. "+ "Please only enter valid 8-puzzles. Enter the puzzle demilimiting"
-        +   + "the numbers with a space. RET only when finished." + '\n')
+        +  "the numbers with a space. RET only when finished." + '\n')
         #take in user input and make the puzzle
         puzzle_row_one = input("Enter the first row: ")
         puzzle_row_two  = input("Enter the second row: ")
@@ -22,11 +23,11 @@ def main():
 
         problem = puzzle_row_one, puzzle_row_two ,puzzle_row_three
     # Allow user to select what alg they would like to use to solve the problem
-    alg_choice  = "Select an algorithm\n"
-    alg_choice += "1.Uniform Cost Search\n"
-    alg_choice += "2.A* with the Misplaced Tile Heuristic\n"
-    alg_choice += "3.A* with the Manhattan Distance Heuristic\n"   
-    print(alg_choice)
+    print("Select an algorithm\n") 
+    print("1.Uniform Cost Search\n")
+    print("2.A* with the Misplaced Tile Heuristic\n")
+    print("3.A* with the Manhattan Distance Heuristic\n")   
+
     alg_ans = int(input())   
     #Begin solving, and will print result
     if alg_ans == 1:
@@ -40,8 +41,7 @@ def main():
         print(general_search(problem, alg_ans))    
     else:
         print("Invalid input")
-
-        
+     
 class Node:
 
     def __init__(self, state, path):
