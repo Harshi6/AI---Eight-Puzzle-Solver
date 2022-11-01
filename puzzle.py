@@ -55,7 +55,7 @@ class Node:
         self.path = path
 
 def general_search(puzzle, alg):
-    
+    start = timeit.default_timer()
     prev = []
     puzzleq = []
     if alg == 1:
@@ -84,8 +84,10 @@ def general_search(puzzle, alg):
         nodes = puzzleq.pop(0)
 
         if nodes.state == (['1', '2', '3'], ['4', '5', '6'], ['7', '8', '0']):
+            stop = timeit.default_timer()
             print("Goal state!")
             print("Solution depth" + str(nodes.depth))
+            print("Runtime: " + str(stop - start))
             break
       
         next = expand_node(nodes, prev)
