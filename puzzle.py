@@ -55,45 +55,68 @@ class Node:
         self.path = path
 
 def general_search(puzzle, alg):
+    #begin timer when user finishes selection
     start = timeit.default_timer()
+    #prev tracks all the states of the puzzle we have already seen, puzzleq is queue 
+    #we will have different 
     prev = []
     puzzleq = []
     if alg == 1:
-        h = 0
+        hcost = 0           #uniform hcost is 0
     if alg == 2:
-        h = misplaced_tiles(puzzle)
+        hcost = misplaced_tiles(puzzle) #go to func and get num of wrong tiles
     if alg == 3:
-        h = manhattan_distance(puzzle)
-
-
+        hcost = manhattan_distance(puzzle) #go to func and get distance of each tile to goal
+   
+    #size will be used to get max q size. count will be used for nodes expanded
+    size = 0
+    #we will need a max size because queue size decreases when we pop, so we will use msize to keep track of highest
+    msize = 0
+    
+    count = 0
+    #input the inital puzzle problem and initalize values, and add it to the queue
+    #this state is now seen so we can add it to prev
     n = Node(puzzle)
     n.depth = 0
-    n.hc = 0
+    n.hc = hcost
     puzzleq.append(n)
-    prev.append(n.state)
+    prev.append(n.state) 
+    size += 1   #can increase size on append
     FLAG = 1
 
-    while FLAG:
-        if len(puzzleq) == 0:
-            return []
+    while FLAG:     #should only get out of while when goal reached
         if alg == 2:
-            puzzleq = sorted(puzzleq, key=lambda ans: (ans.depth + ans.hc))
+             puzzleq.sort(key=lambda ans: (ans.depth + ans.hc)) #sorts by sum of depth and hc which is want we want
+
         if alg == 3:
-            puzzleq = sorted(puzzleq, key=lambda ans: (ans.depth + ans.hc))    
+            puzzleq.sort(key=lambda ans: (ans.depth + ans.hc))  #sorts by sum of depth and hc which is want we want  
 
-        nodes = puzzleq.pop(0)
-
+        nodes = puzzleq.pop(0) 
+        #pop top node, and we can decrement size of queue
+        size -= 1
+        count += 1
+        #check if equal to goal
         if nodes.state == (['1', '2', '3'], ['4', '5', '6'], ['7', '8', '0']):
+            count -= 1
+            #stop the time and print output, and break out
             stop = timeit.default_timer()
             print("Goal state!")
-            print("Solution depth" + str(nodes.depth))
+            print("Solution depth was " + str(nodes.depth))
+            print("Number of nodes expanded: " + str(count))
+            print("Max queue size: " + str(msize))
             print("Runtime: " + str(stop - start))
             break
+        #keep printing until goal found
+        print("Best state to expand with a g(n) = " + str(nodes.depth) + " and h(n) = " + str(nodes.hc)
+                  + " is...\n" + str(nodes.state[0]) + "\n" + str(nodes.state[1]) +  "\n" + str(nodes.state[2]) 
+                  + "\nExpanding...\n")
       
+        #start searching the next batch of potential states
         next = expand_node(nodes, prev)
         moves = [next.mv1, next.mv2, next.mv3, next.mv4]
-
+            #get the updated depth(increment every step) and make sure to get updated h(n) value
         for step in moves:
+            if step is not None:
                 if alg == 2:
                     step.depth = nodes.depth + 1
                     step.hc = misplaced_tiles(step.state)
@@ -103,6 +126,13 @@ def general_search(puzzle, alg):
                 elif alg == 1:
                     step.depth = nodes.depth + 1
                     step.hc = 0
+                #we can add these next step states. Add them to the queue and increment size    
+                puzzleq.append(step)
+                size += 1
+                prev.append(step.state)
+        #just getting the max size at this time
+        msize = max(msize, size)
+        
 def find_blank(nodes):
     row = 0
     col = 0
