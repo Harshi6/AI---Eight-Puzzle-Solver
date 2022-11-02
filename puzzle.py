@@ -147,7 +147,6 @@ def find_blank(nodes):
     return row, col
 
 def move_up(nodes, prev, row, col):
-    if(row > 0):
         #swap up
         move_up = copy.deepcopy(nodes.state)
         temp_up = move_up[row][col]
@@ -158,8 +157,6 @@ def move_up(nodes, prev, row, col):
             nodes.mv1 = Node(move_up)
 
 def move_down(nodes, prev, row, col):
-    check  = len(nodes.state) - 1
-    if row < check:
         #swap down
         move_down = copy.deepcopy(nodes.state)
         temp_down = move_down[row][col]
@@ -170,8 +167,6 @@ def move_down(nodes, prev, row, col):
             nodes.mv2 = Node(move_down)       
 
 def move_right(nodes, prev, row, col):
-    check  = len(nodes.state) - 1
-    if col < check:
         #swap right
         move_right = copy.deepcopy(nodes.state)
         temp_right = move_right[row][col]
@@ -182,7 +177,6 @@ def move_right(nodes, prev, row, col):
             nodes.mv3 = Node(move_right)    
 
 def move_left(nodes, prev, row, col):
-     if col>0:
         #swap left
         move_left = copy.deepcopy(nodes.state)
         temp_left= move_left[row][col]
@@ -196,18 +190,20 @@ def move_left(nodes, prev, row, col):
 #remember, there are multiple ways to move but at max 4
 def expand_node(nodes, prev):
     row,col = find_blank(nodes)
-
+    check  = len(nodes.state) - 1
     #move up option  
-     
-    move_up(nodes, prev, row, col)
-    #move down option         
-    move_down(nodes, prev, row, col)
+    if(row > 0):
+        move_up(nodes, prev, row, col)
+    #move down option  
+    if (row < check):       
+        move_down(nodes, prev, row, col)
     #move right option
-    move_right(nodes, prev, row, col)
+    if (col < check):
+        move_right(nodes, prev, row, col)
     #moves left option
-  
-    move_left(nodes, prev, row, col)
-
+    if (col>0):
+        move_left(nodes, prev, row, col)
+    
     return nodes
 
 #count the total number of misplaced tiles. Check with expected value and actual value. 
