@@ -7,8 +7,18 @@ def main():
     print("Type '1' to use a default puzzle, or '2' to enter your own puzzle.")
     choice = int(input())
     #default hard coded choice
+    
     if choice == 1:
-        problem = (['1', '2', '3'], ['5', '0', '6'], ['4', '7', '8'])
+        print("Type '1' for a easy puzzle")
+        print("Type '2' for a medium puzzle")
+        print("Type '3' for a hard puzzle")
+        difficulty = int(input())
+        if difficulty == 1:
+            problem = (['1', '2', '3'], ['5', '0', '6'], ['4', '7', '8'])
+        if difficulty == 2:
+            problem = (['1', '3', '6'], ['5', '0', '7'], ['4', '8', '2'])
+        if difficulty == 3:
+            problem = (['1', '6', '7'], ['5', '0', '3'], ['4', '8', '2'])
      #take in input for custom puzzle   
     elif choice == 2:
         print("Enter your puzzle, using a zero to represent the blank. "+ "Please only enter valid 8-puzzles. Enter the puzzle demilimiting"
